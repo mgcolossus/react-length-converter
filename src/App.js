@@ -1,24 +1,63 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import UnitList from "./components/UnitList";
 
 function App() {
+  const unitsOfMeasurement = {
+    m: 1,
+    km: 0.001,
+    dm: 10,
+    cm: 100,
+    mm: 1000,
+  };
+  const unitsKeys = Object.keys(unitsOfMeasurement);
+
+  function convertValueToUnit(value, fromUnitName, toUnitName) {
+    return (
+      value *
+        (1 / unitsOfMeasurement[fromUnitName]) *
+        unitsOfMeasurement[toUnitName] || 0
+    );
+  }
+
+  const [values, setValues] = useState(
+    unitsKeys.map((unitName) => {
+      return {
+        name: unitName,
+        value: convertValueToUnit(1, "m", unitName),
+      };
+    })
+  );
+  const [changedValue, setChangedValue] = useState();
+  const [changedValueName, setChangedValueName] = useState();
+
+  useEffect(() => {
+    setValues((values) => {
+      return values.map((unit) => {
+        if (unit["name"] === changedValueName) {
+          return { name: unit["name"], value: changedValue };
+        } else {
+          return {
+            name: unit["name"],
+            value: convertValueToUnit(
+              changedValue,
+              changedValueName,
+              unit["name"]
+            ),
+          };
+        }
+      });
+    });
+  }, [changedValue, changedValueName]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 className="title"> Length Converter </h1>
+      <UnitList
+        values={values}
+        setChangedValue={setChangedValue}
+        setChangedValueName={setChangedValueName}
+      />
     </div>
   );
 }
