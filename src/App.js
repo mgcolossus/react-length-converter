@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import UnitList from "./components/UnitList";
 
@@ -12,14 +12,6 @@ function App() {
   };
   const unitsKeys = Object.keys(unitsOfMeasurement);
 
-  function convertValueToUnit(value, fromUnitName, toUnitName) {
-    return (
-      value *
-        (1 / unitsOfMeasurement[fromUnitName]) *
-        unitsOfMeasurement[toUnitName] || 0
-    );
-  }
-
   const [values, setValues] = useState(
     unitsKeys.map((unitName) => {
       return {
@@ -31,6 +23,10 @@ function App() {
   const [changedValue, setChangedValue] = useState();
   const [changedValueName, setChangedValueName] = useState();
 
+  function convertValueToUnit(value, fromUnitName, toUnitName) {
+    return Number((value * (1 / unitsOfMeasurement[fromUnitName]) * unitsOfMeasurement[toUnitName]).toFixed(14)) || 0;
+  }
+
   useEffect(() => {
     setValues((values) => {
       return values.map((unit) => {
@@ -39,25 +35,17 @@ function App() {
         } else {
           return {
             name: unit["name"],
-            value: convertValueToUnit(
-              changedValue,
-              changedValueName,
-              unit["name"]
-            ),
+            value: convertValueToUnit(changedValue, changedValueName, unit["name"]),
           };
         }
       });
     });
-  }, [changedValue, changedValueName]);
+  }, [changedValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
       <h1 className="title"> Length Converter </h1>
-      <UnitList
-        values={values}
-        setChangedValue={setChangedValue}
-        setChangedValueName={setChangedValueName}
-      />
+      <UnitList values={values} setChangedValue={setChangedValue} setChangedValueName={setChangedValueName} />
     </div>
   );
 }
