@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import UnitList from "./components/UnitList";
 
@@ -24,7 +24,7 @@ function App() {
   const [changedValueName, setChangedValueName] = useState();
 
   function convertValueToUnit(value, fromUnitName, toUnitName) {
-    return Number((value * (1 / unitsOfMeasurement[fromUnitName]) * unitsOfMeasurement[toUnitName]).toFixed(14)) || 0;
+    return Number((value * (1 / unitsOfMeasurement[fromUnitName]) * unitsOfMeasurement[toUnitName]).toFixed(13)) || 0;
   }
 
   useEffect(() => {
