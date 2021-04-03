@@ -1,1 +1,1 @@
-![Скриншот](screenshots/Screenshot1.png)
+<img src="./screenshots/Screenshot1.png" width="800px">
