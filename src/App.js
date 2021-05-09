@@ -20,8 +20,11 @@ function App() {
       };
     })
   );
-  const [changedValue, setChangedValue] = useState();
-  const [changedValueName, setChangedValueName] = useState();
+  
+  const [changedValueParams, setChangedValueParams] = useState({
+    value: null,
+    name: null
+  });
 
   function convertValueToUnit(value, fromUnitName, toUnitName) {
     return Number((value * (1 / unitsOfMeasurement[fromUnitName]) * unitsOfMeasurement[toUnitName]).toFixed(13)) || 0;
@@ -29,23 +32,24 @@ function App() {
 
   useEffect(() => {
     setValues((values) => {
-      return values.map((unit) => {
-        if (unit["name"] === changedValueName) {
-          return { name: unit["name"], value: changedValue };
+      const newData = values.map((unit) => {
+        if (unit["name"] === changedValueParams.name) {
+          return { name: unit["name"], value: changedValueParams.value };
         } else {
           return {
             name: unit["name"],
-            value: convertValueToUnit(changedValue, changedValueName, unit["name"]),
+            value: convertValueToUnit(changedValueParams.value, changedValueParams.name, unit["name"]),
           };
         }
       });
+      return newData;
     });
-  }, [changedValue]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [changedValueParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
       <h1 className="title"> Length Converter </h1>
-      <UnitList values={values} setChangedValue={setChangedValue} setChangedValueName={setChangedValueName} />
+      <UnitList values={values} setChangedValueParams={setChangedValueParams} />
     </div>
   );
 }

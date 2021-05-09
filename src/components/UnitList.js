@@ -1,11 +1,13 @@
 import React from "react";
 import Unit from "./Unit";
 
-function UnitList({ values, setChangedValue, setChangedValueName}) {
+function UnitList({ values, setChangedValueParams}) {
   
   function valueChangeHandler(e) {
-    setChangedValue(e.target.value);
-    setChangedValueName(e.target.nextSibling.textContent);
+    setChangedValueParams({
+      value: e.target.value,
+      name: e.target.nextSibling.textContent
+    })
   }
   return values.map((unit) => {
     return (
